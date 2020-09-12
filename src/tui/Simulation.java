@@ -3,9 +3,9 @@ package tui;
 import java.awt.*;
 
 public class Simulation {
-	public static final Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-	public static final int screenX = screenDimension.width;
-	public static final int screenY = screenDimension.height;
+	public static final GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+	public static final int screenX = graphicsDevice.getDisplayMode().getWidth();
+	public static final int screenY = graphicsDevice.getDisplayMode().getHeight();
 	public static final int COLONIES_DISTANCE = (int) (screenX * 0.3);
 	public static final int topX = (int) (screenX * 0.2);
 	public static final int topY = (int) (screenY * 0.2);
