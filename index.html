@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>war-of-insects-java</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#symulator-wojny-insektów">Symulator wojny insektów</a>
+<ul>
+<li><a href="#cel-projektu">Cel projektu</a></li>
+<li><a href="#opis-programu">Opis programu</a></li>
+<li><a href="#implementacja">Implementacja</a></li>
+<li><a href="#budowa-symulatora">Budowa symulatora</a></li>
+<li><a href="#uruchomienie-symulatora">Uruchomienie symulatora</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="symulator-wojny-insektów">Symulator wojny insektów</h1>
+<p>Adam Rajfer (<a href="mailto:adam.rajfer@gmail.com">adam.rajfer@gmail.com</a>), 2017</p>
+<h2 id="cel-projektu">Cel projektu</h2>
+<p>Celem projektu było wykonanie w języku Java programu służącego do przeprowadzenia symulacji wojny czterech gatunków owadów:</p>
+<ul>
+<li><strong>mrówek</strong>,</li>
+<li><strong>os</strong>,</li>
+<li><strong>pływaków</strong>,</li>
+<li><strong>przekrasek</strong>.</li>
+</ul>
+<h2 id="opis-programu">Opis programu</h2>
+<p>Mrówki atakują osy, osy atakują pływaki, pływaki atakują przekraski, a przekraski atakują mrówki. Powstaje w ten sposób zamknięty łańcuch pokarmowy. Symulacja dobiega końca w dwóch przypadkach:</p>
+<ul>
+<li>w środowisku pozostały jedynie insekty jednego gatunku,</li>
+<li>w środowisku pozostały jedynie insekty dwóch, nie będących ze sobą w konflikcie gatunków.</li>
+</ul>
+<p>Każdy insekt charakteryzuje się również rolą społeczną:</p>
+<ul>
+<li><strong>żołnierze</strong> mają za zadanie zabić insekta wrogiej kolonii,</li>
+<li><strong>pracownicy</strong> mają za zadanie uzdrowić poszkodowanego (żywego) insekta rodzimej kolonii,</li>
+<li><strong>trutnie</strong> mają za zadanie zapłodnić królową oraz zregenerować się,</li>
+<li><strong>królowe</strong> mają za zadanie urodzić nowego żołnierza po uprzednim zapłodnieniu przez trutnie.</li>
+</ul>
+<h2 id="implementacja">Implementacja</h2>
+<h3 id="simulationframe"><code>SimulationFrame</code></h3>
+<p>Jest to najbardziej nadrzędna klasa programu. Dziedziczy po klasie JFrame i reprezentuje okno, w którym odbywa się symulacja.</p>
+<h3 id="simulationpanel"><code>SimulationPanel</code></h3>
+<p>Klasa ta dziedziczy po klasie JPanel. Odbywa się w niej, w kolejnych powtórzeniach pętli <em>while</em>, funkcja, odpowiadająca za kolejne kroki symulacji. Mrówki oznaczone są w oknie jako punkty w kolorze czerwonym, osy—niebieskim, pływaki—białym, a przekraski—zielonym. Ich pozycje aktualizowane są w kolejnych powtórzeniach pętli. Wyświetlana jest również liczność owadów każdego gatunku. Ponadto użytkownik może zmodyfikować niektóre parametry insektów oraz sprawdzić, jak wpłynie to na przebieg i wynik symulacji.</p>
+<h3 id="simulation"><code>Simulation</code></h3>
+<p>Klasa ta odpowiada za przebieg jednej tury symulacji. Wykonywane są w niej kolejno po sobie funkcja szukania celu oraz działania insekta.</p>
+<h3 id="environment"><code>Environment</code></h3>
+<p>Klasa ta odpowiada za wszystkie czynności, jakie wykonywać może insekt. Charakteryzuje środowisko, w którym tworzone są kolejne kolonie insektów. Zawiera mapę referencji do obiektów klasy <code>Colony</code>.</p>
+<h3 id="colony"><code>Colony</code></h3>
+<p>Klasa ta charakteryzuje kolonię, w której tworzone są kolejne grupy insektów. Zawiera mapę referencji do obiektów klasy <code>Group</code>. Posiada również referencję do wrogiej kolonii.</p>
+<h3 id="group"><code>Group</code></h3>
+<p>Klasa ta charakteryzuje grupę insektów o pewnej charakterystycznej roli (np. grupa trutni). Zawiera wektor referencji do obiektów klasy <code>Insect</code>.</p>
+<h3 id="insect"><code>Insect</code></h3>
+<p>Ta abstrakcyjna klasa charakteryzuje insekta, zamieszkującego pewną grupę w pewnej kolonii w danym środowisku. Posiada referencję do swojej grupy, ale również do kolonii, która będzie w przyszłości kolonią docelową insekta. Zawiera również takie pola, jak punkty zdrowia, pozycja na mapie, promień ataku oraz promień ustawienia w szyku. Definiuje ją interfejs z metodami wirtualnymi:</p>
+<ul>
+<li><code>moveTheInsect</code> (ruch insekta),</li>
+<li><code>actTheInsect</code> (działanie insekta),</li>
+<li><code>addGroupsToAct</code> (dodanie nazw grup docelowych insekta),</li>
+<li><code>setVirtualTargetColony</code> (ustawienie kolonii docelowej insekta).</li>
+</ul>
+<p>Po klasie <code>Insect</code> dziedziczą klasy abstrakcyjne: <code>AntInsect</code>, <code>WaspInsect</code>, <code>DytiscidaeInsect</code> oraz <code>ThanasimusInsect</code>. Implementują one metodę wirtualną <code>moveTheInsect</code>. Każdy gatunek porusza się w charakterystyczny dla siebie sposób:</p>
+<ul>
+<li>mrówki poruszają się w wymiarze 2 x 2 pikseli,</li>
+<li>osy poruszają się w wymiarze 1 x 3 pikseli,</li>
+<li>pływaki poruszają się tak, że jeśli znajdują się na współrzędnej startowej y, skaczą na wysokość wroga, a następnie wykonują skok na współrzędną startową y. W osi x poruszają się o 1 piksel,</li>
+<li>przekraski poruszają się w wymiarze 3 x 1 pikseli.</li>
+</ul>
+<p>Po wyżej wymienionych czterech klasach dziedziczą następnie klasy nieabstrakcyjne: <code>QueenAntInsect</code>, <code>DroneAntInsect</code>, <code>SoldierAntInsect</code>, <code>WorkerAntInsect</code>, <code>QueenWaspInsect</code>, <code>DroneWaspInsect</code>, <code>SoldierWaspInsect</code>, <code>WorkerWaspInsect</code>, <code>QueenDytiscidaeInsect</code>, <code>DroneDytiscidaeInsect</code>, <code>SoldierDytiscidaeInsect</code>, <code>WorkerDytiscidaeInsect</code>, <code>QueenThanasimusInsect</code>, <code>DroneThanasimusInsect</code>, <code>SoldierThanasimusInsect</code> oraz <code>WorkerThanasimusInsect</code>. Każdy z gatunków cechuje bowiem odpowiednia rola społeczna. Klasy te implementują metody wirtualne:</p>
+<ul>
+<li><code>actTheInsect</code>,</li>
+<li><code>addGroupsToAct</code>,</li>
+<li><code>setVirtualTargetColony</code>.</li>
+</ul>
+<h2 id="budowa-symulatora">Budowa symulatora</h2>
+<p><code>javac -d bin -sourcepath src src/main/StartSimulation.java</code></p>
+<h2 id="uruchomienie-symulatora">Uruchomienie symulatora</h2>
+<p><code>java -classpath bin main.StartSimulation</code></p>
+<p>Po uruchomieniu programu użytkownik ma możliwość modyfikacji parametrów: <strong>attack</strong> (żołnierzy), <strong>cure</strong> (pracowników) oraz <strong>regeneration time</strong> (trutni).</p>
+
+    </div>
+  </div>
+</body>
+
+</html>
